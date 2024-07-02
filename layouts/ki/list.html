@@ -4,7 +4,11 @@
 
   <div class="row">
   {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+  <div class="m-1">
+    <div class="text-secondary">{{ .Date | time.Format ":date_medium" }}</div>
+    <h3><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h3>
+  </div>
+  
   {{ end }}
     
   </div>
