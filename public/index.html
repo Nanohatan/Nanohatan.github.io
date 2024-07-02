@@ -1,11 +1,15 @@
 
 <!DOCTYPE html>
 <html lang="ja" dir="ltr">
-    <script src="/livereload.js?mindelay=10&amp;v=2&amp;port=56842&amp;path=livereload" data-no-instant defer></script><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <head>
 	<meta name="generator" content="Hugo 0.127.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 <body>
   <header>
@@ -15,7 +19,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav m-1">
         <li class="nav-item">
           <a class="nav-link" href="/">家</a>
         </li>
@@ -25,15 +29,267 @@
         <li class="nav-item">
           <a class="nav-link" href="/da">誰</a>
         </li>
-        
-        
+
       </ul>
     </div>
-  </nav>
+</nav>
+
   </header>
   <main>
     
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
 <h1></h1>
+<div class="container-fluid" >
+</div>
+<script>
+    let flock;
+
+    function setup() {
+      createCanvas( window.innerWidth, window.innerHeight);
+      createP('Drag the mouse to generate new boids.');
+    
+      flock = new Flock();
+    
+      
+      for (let i = 0; i < 100; i++) {
+        let b = new Boid(width / 2, height / 2);
+        flock.addBoid(b);
+      }
+    
+      describe(
+        'A group of bird-like objects, represented by triangles, moving across the canvas, modeling flocking behavior.'
+      );
+    }
+    
+    function draw() {
+      background(0);
+      flock.run();
+    }
+    
+    
+    function mouseDragged() {
+      flock.addBoid(new Boid(mouseX, mouseY));
+    }
+    
+    
+    class Flock {
+      constructor() {
+        
+        this.boids = [];
+      }
+    
+      run() {
+        for (let boid of this.boids) {
+          
+          boid.run(this.boids);
+        }
+      }
+    
+      addBoid(b) {
+        this.boids.push(b);
+      }
+    }
+    
+    class Boid {
+      constructor(x, y) {
+        this.acceleration = createVector(0, 0);
+        this.velocity = createVector(random(-1, 1), random(-1, 1));
+        this.position = createVector(x, y);
+        this.size = 3.0;
+    
+        
+        this.maxSpeed = 3;
+    
+        
+        this.maxForce = 0.05;
+        colorMode(HSB);
+        this.color = color(random(256), 255, 255);
+      }
+    
+      run(boids) {
+        this.flock(boids);
+        this.update();
+        this.borders();
+        this.render();
+      }
+    
+      applyForce(force) {
+        
+        this.acceleration.add(force);
+      }
+    
+      
+      flock(boids) {
+        let separation = this.separate(boids);
+        let alignment = this.align(boids);
+        let cohesion = this.cohesion(boids);
+    
+        
+        separation.mult(1.5);
+        alignment.mult(1.0);
+        cohesion.mult(1.0);
+    
+        
+        this.applyForce(separation);
+        this.applyForce(alignment);
+        this.applyForce(cohesion);
+      }
+    
+      
+      update() {
+        
+        this.velocity.add(this.acceleration);
+    
+        
+        this.velocity.limit(this.maxSpeed);
+        this.position.add(this.velocity);
+    
+        
+        this.acceleration.mult(0);
+      }
+    
+      
+      
+      seek(target) {
+        
+        let desired = p5.Vector.sub(target, this.position);
+    
+        
+        desired.normalize();
+        desired.mult(this.maxSpeed);
+    
+        
+        let steer = p5.Vector.sub(desired, this.velocity);
+    
+        
+        steer.limit(this.maxForce);
+        return steer;
+      }
+    
+      render() {
+        
+        let theta = this.velocity.heading() + radians(90);
+        fill(this.color);
+        stroke(255);
+        push();
+        translate(this.position.x, this.position.y);
+        rotate(theta);
+        beginShape();
+        vertex(0, -this.size * 2);
+        vertex(-this.size, this.size * 2);
+        vertex(this.size, this.size * 2);
+        endShape(CLOSE);
+        pop();
+      }
+    
+      
+      borders() {
+        if (this.position.x < -this.size) {
+          this.position.x = width + this.size;
+        }
+    
+        if (this.position.y < -this.size) {
+          this.position.y = height + this.size;
+        }
+    
+        if (this.position.x > width + this.size) {
+          this.position.x = -this.size;
+        }
+    
+        if (this.position.y > height + this.size) {
+          this.position.y = -this.size;
+        }
+      }
+    
+      
+      
+      separate(boids) {
+        let desiredSeparation = 25.0;
+        let steer = createVector(0, 0);
+        let count = 0;
+    
+        
+        for (let boid of boids) {
+          let distanceToNeighbor = p5.Vector.dist(this.position, boid.position);
+    
+          
+          if (distanceToNeighbor > 0 && distanceToNeighbor < desiredSeparation) {
+            
+            let diff = p5.Vector.sub(this.position, boid.position);
+            diff.normalize();
+    
+            
+            diff.div(distanceToNeighbor);
+            steer.add(diff);
+    
+            
+            count++;
+          }
+        }
+    
+        
+        if (count > 0) {
+          steer.div(count);
+        }
+    
+        
+        if (steer.mag() > 0) {
+          
+          steer.normalize();
+          steer.mult(this.maxSpeed);
+          steer.sub(this.velocity);
+          steer.limit(this.maxForce);
+        }
+        return steer;
+      }
+    
+      
+      
+      align(boids) {
+        let neighborDistance = 50;
+        let sum = createVector(0, 0);
+        let count = 0;
+        for (let i = 0; i < boids.length; i++) {
+          let d = p5.Vector.dist(this.position, boids[i].position);
+          if (d > 0 && d < neighborDistance) {
+            sum.add(boids[i].velocity);
+            count++;
+          }
+        }
+        if (count > 0) {
+          sum.div(count);
+          sum.normalize();
+          sum.mult(this.maxSpeed);
+          let steer = p5.Vector.sub(sum, this.velocity);
+          steer.limit(this.maxForce);
+          return steer;
+        } else {
+          return createVector(0, 0);
+        }
+      }
+    
+      
+      
+      cohesion(boids) {
+        let neighborDistance = 50;
+        let sum = createVector(0, 0); 
+        let count = 0;
+        for (let i = 0; i < boids.length; i++) {
+          let d = p5.Vector.dist(this.position, boids[i].position);
+          if (d > 0 && d < neighborDistance) {
+            sum.add(boids[i].position); 
+            count++;
+          }
+        }
+        if (count > 0) {
+          sum.div(count);
+          return this.seek(sum); 
+        } else {
+          return createVector(0, 0);
+        }
+      }
+    } 
+</script>
 
 
   </main>

@@ -2,20 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:56842/</loc>
+    <loc>http://localhost:54421/</loc>
     <lastmod>2024-07-03T16:01:51+09:00</lastmod>
   </url><url>
-    <loc>http://localhost:56842/ki/</loc>
+    <loc>http://localhost:54421/ki/</loc>
     <lastmod>2024-07-03T16:01:51+09:00</lastmod>
   </url><url>
-    <loc>http://localhost:56842/ki/roku/2024-07-02/</loc>
+    <loc>http://localhost:54421/ki/roku/2024-07-02/</loc>
     <lastmod>2024-07-02T16:01:51+09:00</lastmod>
   </url><url>
-    <loc>http://localhost:56842/ki/roku/2024-06-29/</loc>
+    <loc>http://localhost:54421/ki/roku/2024-06-29/</loc>
     <lastmod>2024-06-29T16:01:51+09:00</lastmod>
   </url><url>
-    <loc>http://localhost:56842/categories/</loc>
+    <loc>http://localhost:54421/da/</loc>
   </url><url>
-    <loc>http://localhost:56842/tags/</loc>
+    <loc>http://localhost:54421/categories/</loc>
+  </url><url>
+    <loc>http://localhost:54421/tags/</loc>
   </url>
 </urlset>
