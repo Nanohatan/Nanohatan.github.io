@@ -2,3 +2,17 @@ baseURL = 'https://nanohatan.github.io/'
 languageCode = 'ja'
 title = 'My New Hugo Site'
 metaDataFormat = "yaml"
+
+[[menus.main]]
+  name = "家"
+  url = "/"
+  weight = 1
+
+[[menus.main]]
+  name = "記"
+  url = "/ki"
+  weight = 2
+[[menus.main]]
+  name = "誰"
+  url = "/da"
+  weight = 3

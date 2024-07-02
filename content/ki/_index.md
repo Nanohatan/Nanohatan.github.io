@@ -1,5 +1,5 @@
 ---
 
 Title: "一覧"
-layout : "ki"
+layout : "ki/list"
 ---

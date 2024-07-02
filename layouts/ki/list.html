@@ -1,8 +1,14 @@
 {{ define "main" }}
-  <h1>{{ with .Site.GetPage "/ki" }}{{ .Title }}{{ end }}</h1>
+<div class="container m-4">
+  <h1 class="m-4">記</h1>
 
-  {{ .Content }}
+  <div class="row">
   {{ range .Pages }}
     <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
   {{ end }}
+    
+  </div>
+</div>
+
+  
 {{ end }}
