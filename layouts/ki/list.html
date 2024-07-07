@@ -1,9 +1,9 @@
 {{ define "main" }}
 <div class="container m-4">
   <h1 class="m-4">記</h1>
-  <div class="row">
       {{ range $index, $page := .Pages }}
-      {{ if eq (mod $index 3) 0 }}<div class="w-100"></div>{{end}}
+      <div class="row">
+      {{/*  {{ if eq (mod $index 3) 0 }}<div class="w-100"></div>{{end}}  */}}
       <div class="card col m-3">
       <div class="card-body" >
         <h4 class="card-title">{{ .LinkTitle }}</h4>
@@ -11,13 +11,13 @@
         <p class="card-text">
           {{ $rawContent := .RawContent }}
           {{ $first10Chars := substr $rawContent 0 15 }}
-          {{ $first10Chars }}....
+          {{ $first10Chars }}....<a href="{{ .RelPermalink }}" class="card-link">つづき</a>
         </p>
-        <a href="{{ .RelPermalink }}" class="card-link">つづき</a>
+        
       </div>
       </div>
+    </div>
     {{ end }}
-  </div>
 </div>
 
   
