@@ -1,6 +1,6 @@
 {{ define "main" }}
 <div class="container m-4">
-    <h1>{{.Title}}</h1>
+    <h1>{{.Title}} {{if .Params.entitle}} / {{.Params.entitle}}{{end}}</h1>
     {{.Content}}
 </div>
 {{ end }}
